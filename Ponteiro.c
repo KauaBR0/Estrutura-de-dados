@@ -1,4 +1,4 @@
-//permitindo várias entradas do usuário com valores aleatórios 
+// Permitindo varias entradas
 
 #include <stdio.h>
 #include <stdlib.h>
