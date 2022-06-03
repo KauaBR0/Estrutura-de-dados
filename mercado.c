@@ -57,20 +57,18 @@ int menor ( int esse , int aquele ) {
 
 void exibe_lista(Dados* lista ) {
 
-        fprintf(stdout, "Lista:\n\n");
-
-        fprintf(stdout, "SIGLA  QTDE  VALOR\n");
+        printf("\nSIGLA  QTDE  VALOR\n");
 
         while (lista != NULL ) {
-          fprintf(stdout, "%s %5d %6.2f\n", 
+            printf("\n%s %5d %6.2f\n", 
                   lista->Sigla,
                   lista->Quantidade, 
                   lista->Valor);
           lista = lista->proximo; 
         }
         fprintf(stdout, "------------------\n ");
-  
-        printf("Pressione uma tecla para continuar.\n");
+
+        printf("Pressione Enter\n\n");
         getchar();
 }
 
@@ -100,7 +98,7 @@ Dados*  verificarOfertas( Dados* ofertasCompra , Dados* ofertasVenda ) {
           int qtdeAcomprar = menor( qualCompra->Quantidade, essaVenda->Quantidade);
           qualCompra->Quantidade -= qtdeAcomprar;
           essaVenda->Quantidade -= qtdeAcomprar;
-          printf( "Comprou %d ações a %f valor\n" , qtdeAcomprar , media);
+          printf( "Comprou %d ações a %.2f valor\n" , qtdeAcomprar , media);
           Dados* onde = buscar_sigla( listaTemporaria , essaVenda->Sigla);
           // se onde for igual a NULL significa que não encontrou 
           // aquela sigla antes na lista, vamos inserí-la
@@ -151,6 +149,7 @@ int main(void) {
   Dados* Ultimaoferta = NULL;
 
     int opcao;
+  
     do {
         //system("clear"); 
         printf("\n Cadastro de Titulos\n\n");
@@ -160,7 +159,6 @@ int main(void) {
         printf("3 - Verificar Ofertas\n");
         printf("4 - Listar ultimas ofertas realizadas\n");
         printf("5 - Sair\n\n");
-
         scanf("%d", &opcao);
 
         switch(opcao) {
@@ -170,14 +168,20 @@ int main(void) {
                   break;
 
                 case 2:
+                  system("clear");
+                  printf("\nLISTA DE COMPRAS\n");
                   exibe_lista(Compras);
+                  printf("\nLISTA DE VENDAS\n");
                   exibe_lista(Vendas);
                   break;
 
                 case 3:
+                  system("clear");
                   Ultimaoferta = verificarOfertas( Compras , Vendas );
                   break;
                 case 4:
+                  system("clear");
+                  printf("As ultimas operacoes realizadas foram: \n");
                   exibe_lista(Ultimaoferta);
                   break;
           
