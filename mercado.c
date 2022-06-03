@@ -27,6 +27,29 @@ Dados* insere_dados(Dados* lista, char* Sigla, int Quantidade, float Valor) {
         return novo;
 }
 
+// como funciona a função buscar_sigla
+// a função retorna um apontador para a oferta que contem a sigla 
+// fornecida como parametro 
+// recebe dois parametros : Uma lista na qual será realizada a busca
+//                          Uma sigla a ser buscada
+// exemplo : buscar_sigla(Compras, "PETR4")
+// retorna A ÙLTIMA oferta de compra feita para a sigla PETR4
+// outro exemplo:
+//    buscar_sigla(Vendas, "LAME3")
+// retorna a ÙLTIMA oferta de venda feita para a sigla LAME3 
+// último exemplo:
+//    buscar_sigla(Ultimaoferta, "PETR4")
+// retorna a ÙLTIMA oferta feita aceita para a sigla PETR4
+
+
+Dados* buscar_sigla(Dados* lista, char* SiglaBuscada ) {
+  if (lista == NULL) return NULL;
+  int comparacao = strcmp(lista->Sigla,SiglaBuscada );
+  if (comparacao == 0 ) return lista;
+  return buscar_sigla( lista->proximo , SiglaBuscada);
+}
+
+
 int menor ( int esse , int aquele ) {
   if (esse < aquele ) {return esse;}
   return aquele ;
@@ -47,16 +70,19 @@ void exibe_lista(Dados* lista ) {
         }
         fprintf(stdout, "------------------\n ");
   
-        printf("Pressione uma tecla para continuar.");
+        printf("Pressione uma tecla para continuar.\n");
         getchar();
 }
 
-void verificarOfertas( Dados* ofertasCompra , Dados* ofertasVenda ) {
+Dados*  verificarOfertas( Dados* ofertasCompra , Dados* ofertasVenda ) {
+//Apresentar o último preço da operação realizada (cotação ) por papel
 
   Dados* qualCompra = ofertasCompra ;
-
+  Dados* listaTemporaria = NULL ;
+  
   while ( qualCompra != NULL ) {
     Dados* essaVenda = ofertasVenda;
+    
     printf( "Procurando ofertas de venda para %s \n", (qualCompra->Sigla));
     printf("Comprador disposto a comprar %d e pagar %.2f\n",
          qualCompra->Quantidade, 
@@ -75,6 +101,22 @@ void verificarOfertas( Dados* ofertasCompra , Dados* ofertasVenda ) {
           qualCompra->Quantidade -= qtdeAcomprar;
           essaVenda->Quantidade -= qtdeAcomprar;
           printf( "Comprou %d ações a %f valor\n" , qtdeAcomprar , media);
+          Dados* onde = buscar_sigla( listaTemporaria , essaVenda->Sigla);
+          // se onde for igual a NULL significa que não encontrou 
+          // aquela sigla antes na lista, vamos inserí-la
+          if ( onde == NULL ) { 
+            listaTemporaria = insere_dados(
+              listaTemporaria,
+              essaVenda->Sigla,
+              qtdeAcomprar,
+              media
+              );
+            } else { // já tava na lista, vamos so atualizar os dados
+              // mudamos apenas a quantidade e o valor da oferta aceita 
+               onde->Quantidade = qtdeAcomprar;
+               onde->Valor = media;
+               // observe que a variável onde->proximo não foi modificada
+            }
           
         }
       }   
@@ -82,6 +124,7 @@ void verificarOfertas( Dados* ofertasCompra , Dados* ofertasVenda ) {
      }
     qualCompra = qualCompra->proximo; 
   }
+  return (listaTemporaria) ;
   
 }
 
@@ -93,7 +136,7 @@ Dados* leArquivo( Dados* lista , char* nomeArquivo ) {
   float wvalor;
   
   
-  while ( fscanf( filePointer,"%s %d %f", wSigla, &wqtde , &wvalor ) !=-1) {
+  while ( fscanf( filePointer,"%s %d %f", wSigla, &wqtde , &wvalor ) !=-1) {    
     lista = insere_dados( lista , wSigla, wqtde, wvalor);
   }
   fclose(filePointer);
@@ -105,10 +148,54 @@ int main(void) {
 
   Dados* Compras = NULL ; 
   Dados* Vendas = NULL ;
+  Dados* Ultimaoferta = NULL;
 
+    int opcao;
+    do {
+        //system("clear"); 
+        printf("\n Cadastro de Titulos\n\n");
+        printf("Escolha uma opcao: \n\n");
+        printf("1 - Insere Titulos\n");
+        printf("2 - Exibe Titulos\n");
+        printf("3 - Verificar Ofertas\n");
+        printf("4 - Listar ultimas ofertas realizadas\n");
+        printf("5 - Sair\n\n");
+
+        scanf("%d", &opcao);
+
+        switch(opcao) {
+                case 1:
+                  Compras = leArquivo( NULL , "compras.dat");
+                  Vendas = leArquivo( NULL , "vendas.dat");
+                  break;
+
+                case 2:
+                  exibe_lista(Compras);
+                  exibe_lista(Vendas);
+                  break;
+
+                case 3:
+                  Ultimaoferta = verificarOfertas( Compras , Vendas );
+                  break;
+                case 4:
+                  exibe_lista(Ultimaoferta);
+                  break;
+          
+                case 5:
+                  exit(0);
+                  break;
+
+                default:
+                  printf("Digite uma opcao valida!\n");
+                  sleep(1);
+                  break;
+        }
+
+        //getchar(); 
+    } while (opcao != 5);
   // PETR4, VALE5, ITSA4, USIM5, LAME3.
   // carregando a lista de ofertas de compras do arquivo
-  Compras = leArquivo( Compras , "compras.dat");
+  /*Compras = leArquivo( Compras , "compras.dat");
   // carregando a lista de ofertas de venda do arquivo
   Vendas = leArquivo( Vendas , "vendas.dat"); 
   
@@ -126,8 +213,7 @@ int main(void) {
   exibe_lista(Compras); 
 
   printf("Como ficaram as Ofertas de vendas\n");
-  exibe_lista(Vendas); 
+  exibe_lista(Vendas); */
 
-  
-  return 0;
+    return 0;
 }
