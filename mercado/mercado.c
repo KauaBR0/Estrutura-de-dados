@@ -90,7 +90,7 @@ Dados*  verificarOfertas( Dados* ofertasCompra , Dados* ofertasVenda ) {
        printf( "Comparando compra de %s com venda de %s\n",
          qualCompra->Sigla,     essaVenda->Sigla );       // testar se é o mesmo papel 
        int resultado = strcmp( essaVenda->Sigla , qualCompra->Sigla );
-      if ( resultado == 0 
+        if ( resultado == 0 
            && qualCompra->Quantidade > 0 
            && essaVenda->Quantidade > 0   ) { // casou, as siglas são iguais
         if (qualCompra->Valor >= essaVenda->Valor ) {
