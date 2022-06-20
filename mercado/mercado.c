@@ -156,8 +156,8 @@ int main(void) {
         printf("Escolha uma opcao: \n\n");
         printf("1 - Insere Titulos\n");
         printf("2 - Exibe Titulos\n");
-        printf("3 - Verificar Ofertas\n");
-        printf("4 - Listar ultimas ofertas realizadas\n");
+        printf("3 - Negociar Ofertas\n");
+        printf("4 - Listar ultimas operacoes realizadas\n");
         printf("5 - Sair\n\n");
         scanf("%d", &opcao);
 
@@ -165,6 +165,8 @@ int main(void) {
                 case 1:
                   Compras = leArquivo( NULL , "compras.dat");
                   Vendas = leArquivo( NULL , "vendas.dat");
+                  system("clear");
+                  printf("\nDados inseridos com sucesso!\n\n");
                   break;
 
                 case 2:
